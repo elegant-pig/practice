@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vote</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Vote</h1>
+    <div id="vote-options"></div>
+    <button id="vote-button">Vote</button>
+    <a href="list-vote.html">Back to List of Votes</a>
+
+    <script>
+        // Extract vote ID from the URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const voteId = urlParams.get('id');
+        // Fetch and display the vote options
+        $(document).ready(function() {
+            $.get(`http://localhost:3000/get-vote/${voteId}`, function(voteData) {
+				console.log(voteData)
+                const $voteOptions = $('#vote-options');
+                $voteOptions.append(`<p>${voteData.question}</p>`);
+                voteData.options.forEach(function(option,index) {
+					console.log(option)
+					console.log(index)
+                    $voteOptions.append(`<label><input type="radio" name="vote-option" value="${index}"> ${option}</label><br>`);
+                });
+            });
+        });
+
+        // Handle voting
+        $('#vote-button').click(function() {
+            var selectedOption = Number($("input[name='vote-option']:checked").val())+1;
+			console.log(selectedOption)
+            if (selectedOption) {
+                const data = {
+                    voteId: voteId,
+                    optionId: selectedOption
+                };
+
+                // Send vote to the server (you should replace this URL with your backend endpoint)
+                $.post('http://localhost:3000/vote', data, function(response) {
+					console.log(voteId)
+					alert("投票成功")
+					
+					window.location.href = 'vote-results.html?id='+voteId;
+                    console.log('Vote recorded successfully:', response);
+                    // Redirect to another page or display a success message
+                }).fail(function(error) {
+                    console.error('Vote recording failed:', error);
+                    // Display an error message
+                });
+            }
+        });
+    </script>
+</body>
+</html>

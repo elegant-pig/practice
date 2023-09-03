@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vote Results</title>
+    <!-- 这里可以添加您需要的样式和脚本链接 -->
+</head>
+<body>
+    <h1>Vote Results</h1>
+    <div id="vote-results"></div>
+    <a href="list-vote.html">Back to List of Votes</a>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Extract vote ID from the URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const voteId = urlParams.get('id');
+console.log(voteId);
+        // Fetch and display the vote results
+        $(function() {
+			
+            $.get(`http://localhost:3000/results/${voteId}`, function(results) {
+				console.log(voteId)
+                const $voteResults = $('#vote-results');
+				console.log(results)
+                results.forEach(function(result) {
+					console.log(result)
+                    $voteResults.append(`<p>${result.option_name}: ${result.vote_count} votes</p>`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Vote</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Create a New Vote</h1>
+    <form id="create-vote-form">
+        <label for="question">Question:</label>
+        <input type="text" id="question" name="question">
+        <br>
+        <label for="options">Options:</label>
+        <input type="text" id="new-option" name="new-option">
+        <button type="button" id="add-option">Add Option</button>
+        <ul id="options-list"></ul>
+        <br>
+        <button type="button" id="create-vote">Create Vote</button>
+    </form>
+
+    <a href="list-vote.html">View All Votes</a>
+
+    <script>
+        const options = [];
+
+        // Add option to the list
+        $('#add-option').click(function() {
+            const newOption = $('#new-option').val().trim();
+            if (newOption !== '') {
+                options.push(newOption);
+                $('#options-list').append(`<li>${newOption}</li>`);
+                $('#new-option').val('');
+            }
+        });
+
+        // Create vote
+        $('#create-vote').click(function() {
+            const question = $('#question').val().trim();
+            if (question !== '' && options.length > 0) {
+                const data = {
+                    question: question,
+                    options: options
+                };
+
+                // Send data to the server (you should replace this URL with your backend endpoint)
+                $.post('http://localhost:3000/create-vote', data, function(response) {
+					// console.log()
+                    console.log('Vote created successfully:', response);
+					alert('创建投票成功')
+					location.reload();
+                    // Redirect to another page or display a success message
+                }).fail(function(error) {
+                    console.error('Vote creation failed:', error);
+                    // Display an error message
+                });
+            }
+        });
+    </script>
+</body>
+</html>

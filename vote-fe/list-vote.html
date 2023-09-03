@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List Votes</title>
+</head>
+<body>
+    <h1>List of Votes</h1>
+    <ul id="votes-list"></ul>
+    <a href="create-vote.html">Create a New Vote</a>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Fetch and display the list of votes
+        $(document).ready(function() {
+            $.get('http://localhost:3000/get-all-votes', function(votes) {
+                const $votesList = $('#votes-list');
+                votes.forEach(function(vote, index) {
+					console.log(vote)
+						console.log(index)
+                     $votesList.append(`<li><a href="vote.html?id=${index+1}">${index + 1}. ${vote}</a></li>`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
